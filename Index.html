@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CatHappy 🐾</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        h1 { font-size: 3.5rem; color: #bb86fc; }
+        .search-box { width: 90%; max-width: 600px; display: flex; gap: 10px; background: #1e1e1e; padding: 10px; border-radius: 50px; }
+        input { flex: 1; padding: 10px; border: none; outline: none; background: transparent; color: white; font-size: 1.1rem; }
+        button { padding: 10px 25px; border-radius: 50px; border: none; background: #bb86fc; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>CatHappy 🐾</h1>
+    <form id="proxy-form" class="search-box">
+        <input id="proxy-address" type="text" placeholder="Search the web purr-fectly...">
+        <button type="submit">Go</button>
+    </form>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <script>
+        const form = document.getElementById('proxy-form');
+        const input = document.getElementById('proxy-address');
+        form.addEventListener('submit', async event => {
+            event.preventDefault();
+            window.navigator.serviceWorker.register('./sw.js', { scope: __uv$config.prefix }).then(() => {
+                let url = input.value.trim();
+                if (!url.includes('.') || url.includes(' ')) url = 'https://www.google.com/search?q=' + url;
+                else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
+                window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
+            });
+        });
+    </script>
+</body>
+</html>
